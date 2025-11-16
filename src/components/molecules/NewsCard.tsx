@@ -3,8 +3,7 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import React from "react";
-import { FaRegClock } from "react-icons/fa";
-import { FaRegCommentDots } from "react-icons/fa";
+import { FaRegClock, FaRegCommentDots } from "react-icons/fa";
 
 interface NewsCardProps {
   img: string;
@@ -16,6 +15,7 @@ interface NewsCardProps {
   author: string;
   link: string;
   delay?: number;
+  theme?: "light" | "dark";
 }
 
 const NewsCard: React.FC<NewsCardProps> = ({
@@ -28,13 +28,19 @@ const NewsCard: React.FC<NewsCardProps> = ({
   author,
   link,
   delay = 0,
+  theme = "light",
 }) => {
+  // For first card special heading color in dark mode
+  const isFirstCard = title === "Abandoning Prayer – Why to Avoid at all Costs?";
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, delay }}
-      className="bg-[#FFFDF6] border border-gray-300 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-500 group"
+      className={`rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-500 group border ${
+        theme === "dark" ? "bg-[#0F0E0B] border-white" : "bg-[#FFFDF6] border-gray-300"
+      }`}
     >
       {/* Image */}
       <div className="overflow-hidden relative">
@@ -64,15 +70,29 @@ const NewsCard: React.FC<NewsCardProps> = ({
         </ul>
 
         {/* Heading */}
-        <h5 className="text-xl font-bold text-gray-900 mb-3 transition-colors duration-300 hover:text-[#0D6832]">
+        <h5
+          className={`text-xl font-bold mb-3 transition-colors duration-300 hover:text-[#0D6832] ${
+            theme === "dark" && isFirstCard ? "text-white" : theme === "dark" ? "text-gray-100" : "text-gray-900"
+          }`}
+        >
           <a href={link}>{title}</a>
         </h5>
 
         {/* Description */}
-        <p className="text-gray-600 mb-6 text-base leading-relaxed">{text}</p>
+        <p
+          className={`mb-6 text-base leading-relaxed ${
+            theme === "dark" ? "text-gray-400" : "text-gray-600"
+          }`}
+        >
+          {text}
+        </p>
 
         {/* Author & Button */}
-        <div className="flex items-center justify-between bg-transparent w-[100%] border border-gray-300 h-16">
+        <div
+          className={`flex items-center justify-between w-full h-16 border ${
+            theme === "dark" ? "border-white bg-transparent" : "border-gray-300 bg-transparent"
+          }`}
+        >
           <div className="flex items-center gap-3 translate-x-2">
             <Image
               src={authorImg}
@@ -81,7 +101,11 @@ const NewsCard: React.FC<NewsCardProps> = ({
               height={40}
               className="rounded-full"
             />
-            <span className="capitalize text-gray-900 font-semibold text-sm">
+            <span
+              className={`capitalize font-semibold text-sm ${
+                theme === "dark" && author === "Amir Khan" ? "text-white" : "text-gray-900"
+              }`}
+            >
               {author}
             </span>
           </div>

@@ -1,19 +1,39 @@
 "use client";
 
-import { motion } from "framer-motion";
-import React from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import React, { useEffect, useState } from "react";
 import GalleryCard from "../molecules/GalleryCard";
 
-const GalleryOne: React.FC = () => {
-  const galleryItems = [
+interface GalleryOneProps {
+  theme?: "light" | "dark";
+}
+
+const GalleryOne: React.FC<GalleryOneProps> = ({ theme = "light" }) => {
+  const [galleryItems, setGalleryItems] = useState([
     { img: "/assets/images/gallery/1.jpg", link: "/service-detail.html" },
     { img: "/assets/images/gallery/2.jpg", link: "/service-detail.html" },
     { img: "/assets/images/gallery/3.jpg", link: "/service-detail.html" },
     { img: "/assets/images/gallery/4.jpg", link: "/service-detail.html" },
-  ];
+  ]);
+
+  // Auto-slide effect
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setGalleryItems((prev) => {
+        const [first, ...rest] = prev;
+        return [...rest, first];
+      });
+    }, 9000); // slide every 3 seconds
+    return () => clearInterval(interval);
+  }, []);
 
   return (
-    <section className="relative bg-white py-20">
+    <section
+      className="relative py-20"
+      style={{
+        backgroundColor: theme === "dark" ? "#131B16" : "#ffffff",
+      }}
+    >
       <div className="max-w-7xl mx-auto px-4">
         {/* Section Title */}
         <motion.div
@@ -23,8 +43,12 @@ const GalleryOne: React.FC = () => {
           className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12"
         >
           <div>
-            <p className="text-[#0D6832] font-semibold text-lg">STUDENT GALLARY</p>
-            <h2 className="text-4xl md:text-5xl font-bold text-black mt-2 leading-snug">
+            <p className="text-[#0D6832] font-semibold text-lg">STUDENT GALLERY</p>
+            <h2
+              className={`text-4xl md:text-5xl font-bold mt-2 leading-snug ${
+                theme === "dark" ? "text-white" : "text-black"
+              }`}
+            >
               Our Islamic Institute <br /> Academy Gallery
             </h2>
           </div>
@@ -40,9 +64,19 @@ const GalleryOne: React.FC = () => {
 
         {/* Gallery Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {galleryItems.map((item, index) => (
-            <GalleryCard key={index} img={item.img} link={item.link} delay={index * 0.2} />
-          ))}
+          <AnimatePresence initial={false}>
+            {galleryItems.map((item, index) => (
+              <motion.div
+                key={item.img} // use img as key for AnimatePresence
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -50 }}
+                transition={{ duration: 0.5 }}
+              >
+                <GalleryCard img={item.img} link={item.link} delay={index * 0.2} />
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
       </div>
     </section>

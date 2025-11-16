@@ -4,7 +4,11 @@ import { motion } from "framer-motion";
 import React from "react";
 import PriceCard from "../molecules/PriceCard";
 
-const PriceOne: React.FC = () => {
+interface PriceOneProps {
+  theme?: "light" | "dark";
+}
+
+const PriceOne: React.FC<PriceOneProps> = ({ theme = "light" }) => {
   const prices = [
     {
       price: 32,
@@ -56,11 +60,18 @@ const PriceOne: React.FC = () => {
     },
   ];
 
+  const bgColor = theme === "dark" ? "bg-[#131B16]" : "bg-white";
+  const titleColor = theme === "dark" ? "text-white" : "text-gray-900";
+  const subTitleColor = theme === "dark" ? "text-[#0D6832]" : "text-[#0D6832]";
+
   return (
     <section
-      className="relative bg-[White] py-20"
+      className={`relative ${bgColor} py-20`}
       style={{
-        backgroundImage: "url('/assets/images/background/pattern-bg.png')",
+        backgroundImage:
+          theme === "dark"
+            ? "url('/assets/images/background/pattern-bg-dark.png')"
+            : "url('/assets/images/background/pattern-bg.png')",
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center top",
       }}
@@ -73,10 +84,12 @@ const PriceOne: React.FC = () => {
           transition={{ duration: 0.7, ease: "easeOut" }}
           className="mb-14"
         >
-          <p className="text-[#0D6832] font-semibold text-lg">
+          <p className={`${subTitleColor} font-semibold text-lg`}>
             Why to Choose Us
           </p>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mt-2 leading-snug">
+          <h2
+            className={`text-4xl md:text-5xl font-bold mt-2 leading-snug ${titleColor}`}
+          >
             Why Choose Our Islamic <br /> Institute
           </h2>
         </motion.div>
@@ -84,7 +97,7 @@ const PriceOne: React.FC = () => {
         {/* Price Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 justify-center">
           {prices.map((item, index) => (
-            <PriceCard key={index} {...item} delay={index * 0.2} />
+            <PriceCard key={index} {...item} delay={index * 0.2} theme={theme} />
           ))}
         </div>
       </div>

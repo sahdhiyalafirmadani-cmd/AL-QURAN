@@ -4,8 +4,11 @@ import { motion } from "framer-motion";
 import React from "react";
 import NewsCard from "../molecules/NewsCard";
 
+interface NewsOneProps {
+  theme?: "light" | "dark";
+}
 
-const NewsOne: React.FC = () => {
+const NewsOne: React.FC<NewsOneProps> = ({ theme = "light" }) => {
   const posts = [
     {
       img: "/assets/images/resource/news-1.jpg",
@@ -40,14 +43,23 @@ const NewsOne: React.FC = () => {
   ];
 
   return (
-    <section className="py-20 bg-white">
+    <section
+      className="py-20"
+      style={{
+        backgroundColor: theme === "dark" ? "#131B16" : "#ffffff",
+      }}
+    >
       <div className="max-w-7xl mx-auto px-4 text-center">
         {/* Section Title */}
         <div className="mb-14">
           <p className="text-[#0D6832] font-semibold text-lg tracking-wide">
             OUR NEWS UPDATES
           </p>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mt-3 leading-snug">
+          <h2
+            className={`text-4xl md:text-5xl font-bold mt-3 leading-snug ${
+              theme === "dark" ? "text-white" : "text-gray-900"
+            }`}
+          >
             Latest News & Articles From <br /> The Blog
           </h2>
         </div>
@@ -55,7 +67,7 @@ const NewsOne: React.FC = () => {
         {/* News Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           {posts.map((item, index) => (
-            <NewsCard key={index} {...item} delay={index * 0.2} />
+            <NewsCard key={index} {...item} delay={index * 0.2} theme={theme} />
           ))}
         </div>
       </div>

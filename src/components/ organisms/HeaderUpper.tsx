@@ -6,23 +6,35 @@ import Image from "next/image";
 import NavMenu from "../molecules/NavMenu";
 import SearchOverlay from "../ atoms/SearchOverlay";
 import MobileMenu from "../molecules/MobileMenu";
-// ✅ new mobile menu import
+import { Theme } from "@/types/theme"; // import the shared type
+import { themeClasses } from "@/utils/themeUtils"; // import helper styles
 
-const HeaderUpper = () => {
+interface HeaderUpperProps {
+  theme?: Theme; // light | dark
+}
+
+const HeaderUpper: React.FC<HeaderUpperProps> = ({ theme = "light" }) => {
   const [searchOpen, setSearchOpen] = useState(false);
+  const t = themeClasses[theme]; // pick styles based on theme
 
   return (
     <>
       {/* Search Overlay */}
       <SearchOverlay open={searchOpen} setOpen={setSearchOpen} />
 
-     <header className="w-full bg-white shadow-sm  sticky top-0 z-50">
+      <header
+        className={`w-full ${t.bg} ${t.text} shadow-sm sticky top-0 z-50 transition-colors duration-300`}
+      >
         <div className="max-w-7xl mx-auto px-4 py-6 flex items-center justify-between">
           
           {/* ✅ Logo */}
           <a href="/" className="block">
             <Image
-              src="/assets/images/logo.svg"
+              src={
+                theme === "dark"
+                  ? "/assets/images/logo-white.svg" // your white logo for dark mode
+                  : "/assets/images/logo.svg"
+              }
               alt="Logo"
               width={160}
               height={48}
@@ -33,7 +45,7 @@ const HeaderUpper = () => {
 
           {/* ✅ Desktop Navigation */}
           <div className="hidden md:block">
-            <NavMenu />
+            <NavMenu theme ={theme} />
           </div>
 
           {/* ✅ Right side buttons */}
@@ -41,7 +53,7 @@ const HeaderUpper = () => {
             {/* Search Button */}
             <button
               onClick={() => setSearchOpen(true)}
-              className="p-3 rounded-full border border-gray-400 bg-white text-black hover:bg-[#1A8754] hover:text-white transition"
+              className={`p-3 rounded-full border ${t.border} ${t.bg} ${t.text} hover:bg-[#1A8754] hover:text-white transition`}
               aria-label="Search"
             >
               <FaSearch />
@@ -50,7 +62,7 @@ const HeaderUpper = () => {
             {/* User Button */}
             <a
               href="/register"
-              className="p-3 rounded-full border border-gray-400 text-black hover:bg-[#1A8754] hover:text-white transition"
+              className={`p-3 rounded-full border ${t.border} ${t.text} hover:bg-[#1A8754] hover:text-white transition`}
             >
               <FaUser />
             </a>
@@ -64,12 +76,12 @@ const HeaderUpper = () => {
             </a>
           </div>
 
-          {/* ✅ Mobile Section (only visible on small screens) */}
+          {/* ✅ Mobile Section */}
           <div className="flex md:hidden items-center gap-3">
             {/* Search Icon */}
             <button
               onClick={() => setSearchOpen(true)}
-              className="p-3 rounded-full border border-gray-300 bg-white text-black hover:bg-[#1A8754] hover:text-white transition"
+              className={`p-3 rounded-full border ${t.border} ${t.bg} ${t.text} hover:bg-[#1A8754] hover:text-white transition`}
             >
               <FaSearch />
             </button>
@@ -77,13 +89,13 @@ const HeaderUpper = () => {
             {/* User Icon */}
             <a
               href="/register"
-              className="p-3 rounded-full border border-gray-300 text-black hover:bg-[#1A8754] hover:text-white transition"
+              className={`p-3 rounded-full border ${t.border} ${t.text} hover:bg-[#1A8754] hover:text-white transition`}
             >
               <FaUser />
             </a>
 
-            {/* Hamburger menu icon */}
-            <MobileMenu /> {/* ✅ integrated new responsive mobile menu */}
+            {/* Hamburger Menu */}
+            <MobileMenu theme={theme} />
           </div>
         </div>
       </header>

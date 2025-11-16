@@ -8,7 +8,11 @@ import "swiper/css";
 import "swiper/css/pagination";
 import TestimonialCard from "../molecules/TestimonialCard";
 
-const TestimonialOne: React.FC = () => {
+interface TestimonialOneProps {
+  theme?: "light" | "dark";
+}
+
+const TestimonialOne: React.FC<TestimonialOneProps> = ({ theme = "light" }) => {
   const testimonials = [
     {
       title: "Customers Review",
@@ -33,11 +37,17 @@ const TestimonialOne: React.FC = () => {
     },
   ];
 
+  // choose background image per theme (make sure these files exist)
+  const bgImage =
+    theme === "dark"
+      ? "/assets/images/background/testimonial-one_bg-2.png" // <-- dark image
+      : "/assets/images/background/testimonial-one_bg.png"; // <-- original light image
+
   return (
     <section
-      className="relative bg-gradient-to-r from-[#f6f7f1] to-[#d7ecd6] bg-no-repeat bg-cover bg-center overflow-hidden py-20"
+      className="relative bg-no-repeat bg-cover bg-center overflow-hidden py-20"
       style={{
-        backgroundImage: "url('/assets/images/background/testimonial-one_bg.png')",
+        backgroundImage: `url('${bgImage}')`,
       }}
     >
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 items-center gap-10 px-6 relative">
@@ -68,7 +78,8 @@ const TestimonialOne: React.FC = () => {
           >
             {testimonials.map((item, i) => (
               <SwiperSlide key={i}>
-                <TestimonialCard {...item} />
+                {/* pass theme down so card & author can style correctly */}
+                <TestimonialCard {...item} theme={theme} />
               </SwiperSlide>
             ))}
           </Swiper>
@@ -78,7 +89,7 @@ const TestimonialOne: React.FC = () => {
         </div>
       </div>
 
-      {/* Dots styling */}
+      {/* Dots styling (kept exactly as before) */}
       <style jsx global>{`
         .testimonial-pagination .swiper-pagination-bullet {
           background: white;
@@ -91,20 +102,6 @@ const TestimonialOne: React.FC = () => {
         .testimonial-pagination .swiper-pagination-bullet-active {
           background: #16a34a !important;
           transform: scale(1.2);
-        }
-        @keyframes float {
-          0% {
-            transform: translateY(0);
-          }
-          50% {
-            transform: translateY(-8px);
-          }
-          100% {
-            transform: translateY(0);
-          }
-        }
-        .animate-float {
-          animation: float 4s ease-in-out infinite;
         }
       `}</style>
     </section>

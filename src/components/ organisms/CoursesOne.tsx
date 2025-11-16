@@ -2,6 +2,10 @@
 
 import CourseCard from "../molecules/CourseCard";
 
+interface CoursesOneProps {
+  theme?: "light" | "dark";
+}
+
 const courses = [
   {
     img: "/assets/images/resource/course-1.jpg",
@@ -53,25 +57,36 @@ const courses = [
   },
 ];
 
-export default function CoursesOne() {
+export default function CoursesOne({ theme = "light" }: CoursesOneProps) {
+  const isDark = theme === "dark";
+
   return (
     <section
-      className="py-40 bg-[#FAF9F6] mt-[100px] relative overflow-hidden"
+      className="py-40  relative overflow-hidden"
       aria-label="courses-one"
       style={{
-        backgroundImage: "url('/assets/images/background/courses-one_bg.png')",
+        backgroundColor: isDark ? "#0E110F" : "#FAF9F6", // ✔️ SECTION BG
+        backgroundImage:
+          "url('/assets/images/background/courses-one_bg.png')",
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center",
         backgroundSize: "cover",
       }}
     >
       <div className="max-w-7xl mx-auto px-4 relative z-10">
+
         {/* Section header */}
         <div className="text-center mb-12 -mt-[35px]">
           <div className="text-[#0D6832] font-bold text-lg tracking-wide">
-           Popular Courses
+            Popular Courses
           </div>
-          <h2 className="text-3xl md:text-4xl font-extrabold text-[#0b1220] leading-snug mt-2">
+
+          <h2
+            className="text-3xl md:text-4xl font-extrabold leading-snug mt-2"
+            style={{
+              color: isDark ? "#FFFFFF" : "#0b1220", // ✔️ MAIN HEADING
+            }}
+          >
             Our Arabic & Islamic Courses
           </h2>
         </div>
@@ -79,12 +94,11 @@ export default function CoursesOne() {
         {/* Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-25">
           {courses.map((c, i) => (
-            <CourseCard key={i} course={c} index={i} />
+            <CourseCard key={i} course={c} index={i} theme={theme} />
           ))}
         </div>
       </div>
 
-      {/* Optional soft overlay for extra brightness */}
       <div className="absolute inset-0 bg-white/5 pointer-events-none" />
     </section>
   );

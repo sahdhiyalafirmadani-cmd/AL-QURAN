@@ -9,6 +9,10 @@ type NavItem = {
   mega?: boolean;
 };
 
+interface NavMenuProps {
+  theme?: "light" | "dark";
+}
+
 const navItems: NavItem[] = [
   { label: "Home", mega: true },
   {
@@ -67,7 +71,7 @@ const navItems: NavItem[] = [
   { label: "Contact", href: "/contact" },
 ];
 
-const NavMenu = () => {
+const NavMenu: React.FC<NavMenuProps> = ({ theme = "light" }) => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const [closeTimeout, setCloseTimeout] = useState<NodeJS.Timeout | null>(null);
 
@@ -77,7 +81,7 @@ const NavMenu = () => {
   };
 
   const handleMouseLeave = () => {
-    const timeout = setTimeout(() => setOpenIndex(null), 500);
+    const timeout = setTimeout(() => setOpenIndex(null), 400);
     setCloseTimeout(timeout);
   };
 
@@ -90,6 +94,10 @@ const NavMenu = () => {
     return () => document.removeEventListener("click", handleOutsideClick);
   }, []);
 
+  // ✅ top-level text colors
+  const topLevelColor =
+    theme === "dark" ? "text-white hover:text-white" : "text-[#0b1220] hover:text-black";
+
   return (
     <ul className="hidden md:flex items-center gap-6">
       {navItems.map((item, idx) => (
@@ -99,45 +107,31 @@ const NavMenu = () => {
           onMouseEnter={() => handleMouseEnter(idx)}
           onMouseLeave={handleMouseLeave}
         >
-          {item.label === "Contact" ? (
-            <a
-              href={item.href}
-              className="px-3 py-2 inline-block text-[#0b1220] font-medium hover:bg-white hover:text-black rounded transition"
-            >
-              {item.label}
-            </a>
-          ) : (
-            <a
-              href={item.href || "#"}
-              className="px-3 py-2 inline-block text-[#0b1220] font-medium hover:bg-white hover:text-black rounded transition"
-            >
-              {item.label}
-            </a>
-          )}
+          <a
+            href={item.href || "#"}
+            className={`px-3 py-2 inline-block font-medium rounded transition ${topLevelColor}`}
+          >
+            {item.label}
+          </a>
 
-          {/* Mega menu */}
+          {/* ✅ Mega Menu */}
           {item.mega && openIndex === idx && (
             <div className="absolute left-0 mt-2 z-40">
               <MegaMenu />
             </div>
           )}
 
-          {/* Regular dropdown */}
+          {/* ✅ Regular Dropdown (unchanged) */}
           {item.children && openIndex === idx && !item.mega && (
             <div className="absolute left-0 mt-2 z-40">
               <div className="min-w-[260px] bg-white text-black rounded-md shadow-2xl p-3">
                 {item.children.map((child, cidx) =>
                   child.children ? (
                     <div key={cidx} className="relative group/item">
-                      {/* Parent with nested submenu */}
                       <div className="px-3 py-2 flex justify-between items-center hover:bg-gray-100 rounded cursor-pointer">
-                        <div className="flex items-center gap-2 group-hover/item:before:content-['↘'] before:opacity-100 before:text-green-600 before:mr-1 before:transition-all before:duration-200">
-                          <span className="ml-1">{child.label}</span>
-                        </div>
+                        <span>{child.label}</span>
                         <span className="text-sm opacity-70">{">"}</span>
                       </div>
-
-                      {/* Nested submenu */}
                       <div className="absolute left-full top-0 ml-1 hidden group-hover/item:block">
                         <div className="bg-white text-black rounded-md shadow-2xl p-2 min-w-[200px]">
                           {child.children.map((s, si) => (

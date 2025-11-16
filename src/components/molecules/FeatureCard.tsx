@@ -3,14 +3,17 @@ import React from "react";
 import { motion } from "framer-motion";
 
 interface FeatureCardProps {
-  icon: React.ReactNode; // SVG icon or React node
+  icon: React.ReactNode;
   lines: string[];
+  theme?: "light" | "dark"; // added
 }
 
-export default function FeatureCard({ icon, lines }: FeatureCardProps) {
+export default function FeatureCard({ icon, lines, theme = "light" }: FeatureCardProps) {
+  const textColor = theme === "dark" ? "text-white" : "text-[#0b1220]";
+
   return (
     <div className="flex items-center gap-4 bg-transparent justify-start pl-4">
-      {/* Circle with icon inside and flips on hover */}
+      {/* Circle with icon inside (unchanged) */}
       <motion.div
         whileHover={{ rotateY: 180 }}
         transition={{ duration: 0.6, ease: "easeInOut" }}
@@ -22,10 +25,12 @@ export default function FeatureCard({ icon, lines }: FeatureCardProps) {
 
       {/* Text next to circle */}
       <div>
-        <p className="text-[#0b1220] font-semibold text-lg leading-tight">
+        <p className={`${textColor} font-semibold text-lg leading-tight`}>
           {lines[0]}
         </p>
-        <p className="text-[#0b1220] text-base leading-tight">{lines[1]}</p>
+        <p className={`${textColor} text-base leading-tight`}>
+          {lines[1]}
+        </p>
       </div>
     </div>
   );

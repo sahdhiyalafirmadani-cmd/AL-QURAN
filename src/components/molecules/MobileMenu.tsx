@@ -21,7 +21,7 @@ const MENU: DropdownItem[] = [
       { title: "Home 04", href: "/index-4" },
       { title: "Home 05", href: "/index-5" },
       { title: "Home 06", href: "/index-6" },
-      { title: "Home 01 dark", href: "/index-7" },
+      { title: "Home 01 dark", href: "/home01-dark" },
       { title: "Home 07 dark", href: "/index-8" },
     ],
   },
@@ -83,7 +83,11 @@ const MENU: DropdownItem[] = [
   },
 ];
 
-const MobileMenu: React.FC = () => {
+interface MobileMenuProps {
+  theme?: "light" | "dark"; // optional prop
+}
+
+const MobileMenu: React.FC<MobileMenuProps> = ({ theme = "light" }) => {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState<string | null>(null);
   const [activeSub, setActiveSub] = useState<string | null>(null);
@@ -111,10 +115,17 @@ const MobileMenu: React.FC = () => {
     setActiveSub((prev) => (prev === title ? null : title));
   };
 
+  // Dark mode classes
+  const bgClass = theme === "dark" ? "bg-[#131B16]" : "bg-white";
+  const textClass = theme === "dark" ? "text-white" : "text-black";
+  const borderClass = theme === "dark" ? "border-gray-700" : "border-gray-200";
+  const buttonColorClass = theme === "dark" ? "text-white" : "text-black"; // Hamburger + close button
+
   return (
     <>
+      {/* Hamburger button */}
       <button
-        className="md:hidden text-black text-3xl"
+        className={`md:hidden text-3xl ${buttonColorClass}`}
         onClick={() => setOpen(true)}
         aria-label="Open menu"
       >
@@ -134,21 +145,26 @@ const MobileMenu: React.FC = () => {
             />
 
             <motion.aside
-              className="fixed top-0 right-0 z-50 h-full bg-white shadow-2xl flex flex-col"
+              className={`fixed top-0 right-0 z-50 h-full shadow-2xl flex flex-col ${bgClass}`}
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ duration: 0.35, ease: "easeOut" }}
               style={{ width: "75%", maxWidth: "640px" }}
             >
-              <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+              <div className={`flex items-center justify-between px-6 py-4 border-b ${borderClass}`}>
                 <Link href="/" onClick={() => setOpen(false)}>
-                  <Image src="/assets/images/logo.svg" alt="logo" width={120} height={40} />
+                  <Image
+                    src={theme === "dark" ? "/assets/images/logo-white.svg" : "/assets/images/logo.svg"}
+                    alt="logo"
+                    width={120}
+                    height={40}
+                  />
                 </Link>
                 <button
                   onClick={() => setOpen(false)}
                   aria-label="Close menu"
-                  className="text-2xl p-2 rounded hover:bg-gray-100 transition"
+                  className={`text-2xl p-2 rounded hover:bg-gray-100 transition ${buttonColorClass}`}
                 >
                   <FaTimes />
                 </button>
@@ -161,21 +177,20 @@ const MobileMenu: React.FC = () => {
                     const expanded = active === item.title;
 
                     return (
-                      <li key={item.title} className="border-b border-gray-200">
+                      <li key={item.title} className={`border-b ${borderClass}`}>
                         <div className="flex justify-between items-center py-3">
-                          {/* Text clickable for navigation if href exists */}
                           {item.href && !hasDropdown ? (
                             <Link
                               href={item.href}
                               onClick={() => setOpen(false)}
-                              className="text-base font-semibold text-gray-800  flex-1"
+                              className={`text-base font-semibold flex-1 ${textClass}`}
                             >
                               {item.title}
                             </Link>
                           ) : (
                             <button
                               onClick={() => toggleDropdown(item.title)}
-                              className="text-base font-semibold text-gray-800  flex-1 text-left"
+                              className={`text-base font-semibold flex-1 text-left ${textClass}`}
                             >
                               {item.title}
                             </button>
@@ -186,16 +201,13 @@ const MobileMenu: React.FC = () => {
                               <span className="text-gray-300 select-none">|</span>
                               <button onClick={() => toggleDropdown(item.title)}>
                                 <FaChevronDown
-                                  className={`text-gray-600 transition-transform ${
-                                    expanded ? "rotate-180" : ""
-                                  }`}
+                                  className={`transition-transform ${expanded ? "rotate-180" : ""} ${textClass}`}
                                 />
                               </button>
                             </div>
                           )}
                         </div>
 
-                        {/* Dropdown */}
                         <AnimatePresence initial={false}>
                           {expanded && hasDropdown && (
                             <motion.ul
@@ -209,20 +221,20 @@ const MobileMenu: React.FC = () => {
                                 const subExpanded = activeSub === sub.title;
 
                                 return (
-                                  <li key={sub.title} className="border-b border-gray-100">
+                                  <li key={sub.title} className={`border-b ${borderClass}`}>
                                     <div className="flex justify-between items-center py-2">
                                       {sub.href && !hasChildren ? (
                                         <Link
                                           href={sub.href}
                                           onClick={() => setOpen(false)}
-                                          className="text-black  flex-1"
+                                          className={`text-sm pl-4 flex-1 ${textClass}`}
                                         >
                                           {sub.title}
                                         </Link>
                                       ) : (
                                         <button
                                           onClick={() => toggleSub(sub.title)}
-                                          className="text-black  flex-1 text-left"
+                                          className={`text-sm pl-4 flex-1 text-left ${textClass}`}
                                         >
                                           {sub.title}
                                         </button>
@@ -233,41 +245,33 @@ const MobileMenu: React.FC = () => {
                                           <span className="text-gray-300 select-none">|</span>
                                           <button onClick={() => toggleSub(sub.title)}>
                                             <FaChevronDown
-                                              className={`text-gray-600 transition-transform ${
-                                                subExpanded ? "rotate-180" : ""
-                                              }`}
+                                              className={`transition-transform ${subExpanded ? "rotate-180" : ""} ${textClass}`}
                                             />
                                           </button>
                                         </div>
                                       )}
                                     </div>
 
-                                    {/* Sub-dropdown */}
-                                    <AnimatePresence initial={false}>
-                                      {subExpanded && hasChildren && (
-                                        <motion.ul
-                                          initial={{ height: 0, opacity: 0 }}
-                                          animate={{ height: "auto", opacity: 1 }}
-                                          exit={{ height: 0, opacity: 0 }}
-                                          transition={{ duration: 0.25 }}
-                                        >
-                                          {sub.children!.map((child) => (
-                                            <li
-                                              key={child.label}
-                                              className="border-b border-gray-100"
+                                    {subExpanded && hasChildren && (
+                                      <motion.ul
+                                        initial={{ height: 0, opacity: 0 }}
+                                        animate={{ height: "auto", opacity: 1 }}
+                                        exit={{ height: 0, opacity: 0 }}
+                                        transition={{ duration: 0.25 }}
+                                      >
+                                        {sub.children!.map((child) => (
+                                          <li key={child.label} className={`border-b ${borderClass}`}>
+                                            <Link
+                                              href={child.href}
+                                              onClick={() => setOpen(false)}
+                                              className={`block py-2 pl-6 text-sm ${textClass}`}
                                             >
-                                              <Link
-                                                href={child.href}
-                                                onClick={() => setOpen(false)}
-                                                className="block py-2 pl-6 text-black  text-sm"
-                                              >
-                                                {child.label}
-                                              </Link>
-                                            </li>
-                                          ))}
-                                        </motion.ul>
-                                      )}
-                                    </AnimatePresence>
+                                              {child.label}
+                                            </Link>
+                                          </li>
+                                        ))}
+                                      </motion.ul>
+                                    )}
                                   </li>
                                 );
                               })}

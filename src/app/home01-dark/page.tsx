@@ -1,4 +1,4 @@
-import Home01 from "@/components/pages/Home01";
+import Home01Dark from "@/components/pages/Home01Dark";
 
 
 
@@ -6,7 +6,7 @@ export default function HomePage() {
   return (
     <>
       
-        <Home01 />
+        <Home01Dark />
     </>
   );
 }

@@ -2,10 +2,12 @@
 
 import ServiceCard from "../molecules/ServiceCard";
 
-export default function ServiceOne() {
+export default function ServiceOne({ theme = "light" }: { theme?: "light" | "dark" }) {
+  const sectionBg = theme === "dark" ? "bg-[#121d18]" : "bg-[#051912]";
+  
   return (
     <section
-      className="relative py-32 bg-[#051912] bg-cover bg-center min-h-[800px]" // increased height
+      className={`relative py-32 bg-cover bg-center min-h-[800px] ${sectionBg}`}
       style={{
         backgroundImage: "url('/assets/images/background/service-bg.png')",
       }}
@@ -34,6 +36,7 @@ export default function ServiceOne() {
               lorem ipsum dolor sit amet
             </>
           }
+          theme={theme}
         />
         <ServiceCard
           iconClass="flaticon-pray"
@@ -46,6 +49,7 @@ export default function ServiceOne() {
               lorem ipsum dolor sit amet
             </>
           }
+          theme={theme}
         />
         <ServiceCard
           iconClass="flaticon-quran-2"
@@ -58,6 +62,7 @@ export default function ServiceOne() {
               lorem ipsum dolor sit amet
             </>
           }
+          theme={theme}
         />
       </div>
     </section>

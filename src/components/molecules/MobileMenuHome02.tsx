@@ -7,10 +7,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+// Type definitions
 type SubChild = { label: string; href: string };
 type SubItem = { title: string; href?: string; children?: SubChild[] };
 type DropdownItem = { title: string; href?: string; subItems?: SubItem[] };
 
+// Menu data
 const MENU: DropdownItem[] = [
   {
     title: "Home",
@@ -83,11 +85,7 @@ const MENU: DropdownItem[] = [
   },
 ];
 
-interface MobileMenuProps {
-  theme?: "light" | "dark"; // optional prop
-}
-
-const MobileMenu: React.FC<MobileMenuProps> = ({ theme = "light" }) => {
+const MobileMenuHome02 = () => {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState<string | null>(null);
   const [activeSub, setActiveSub] = useState<string | null>(null);
@@ -107,27 +105,21 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ theme = "light" }) => {
   }, [open]);
 
   const toggleDropdown = (title: string) => {
-    setActive((prev) => (prev === title ? null : title));
+    setActive(prev => (prev === title ? null : title));
     setActiveSub(null);
   };
 
   const toggleSub = (title: string) => {
-    setActiveSub((prev) => (prev === title ? null : title));
+    setActiveSub(prev => (prev === title ? null : title));
   };
-
-  // Dark mode classes
-  const bgClass = theme === "dark" ? "bg-[#131B16]" : "bg-white";
-  const textClass = theme === "dark" ? "text-white" : "text-black";
-  const borderClass = theme === "dark" ? "border-gray-700" : "border-gray-200";
-  const buttonColorClass = theme === "dark" ? "text-white" : "text-black"; // Hamburger + close button
 
   return (
     <>
-      {/* Hamburger button */}
+      {/* Hamburger icon */}
       <button
-        className={`md:hidden text-3xl ${buttonColorClass}`}
-        onClick={() => setOpen(true)}
+        className="text-white text-3xl"
         aria-label="Open menu"
+        onClick={() => setOpen(true)}
       >
         ☰
       </button>
@@ -145,17 +137,17 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ theme = "light" }) => {
             />
 
             <motion.aside
-              className={`fixed top-0 right-0 z-50 h-full shadow-2xl flex flex-col ${bgClass}`}
+              className="fixed top-0 right-0 z-50 h-full w-3/4 max-w-[640px] shadow-2xl bg-white flex flex-col"
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ duration: 0.35, ease: "easeOut" }}
-              style={{ width: "75%", maxWidth: "640px" }}
             >
-              <div className={`flex items-center justify-between px-6 py-4 border-b ${borderClass}`}>
+              {/* Top inside menu */}
+              <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
                 <Link href="/" onClick={() => setOpen(false)}>
                   <Image
-                    src={theme === "dark" ? "/assets/images/logo-white.svg" : "/assets/images/logo.svg"}
+                    src="/assets/images/logo.svg"
                     alt="logo"
                     width={120}
                     height={40}
@@ -164,33 +156,34 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ theme = "light" }) => {
                 <button
                   onClick={() => setOpen(false)}
                   aria-label="Close menu"
-                  className={`text-2xl p-2 rounded hover:bg-gray-100 transition ${buttonColorClass}`}
+                  className="text-2xl p-2 rounded hover:bg-gray-100 transition text-black"
                 >
                   <FaTimes />
                 </button>
               </div>
 
+              {/* Menu items */}
               <nav className="px-6 py-4 overflow-auto">
                 <ul>
-                  {MENU.map((item) => {
+                  {MENU.map(item => {
                     const hasDropdown = !!item.subItems?.length;
                     const expanded = active === item.title;
 
                     return (
-                      <li key={item.title} className={`border-b ${borderClass}`}>
+                      <li key={item.title} className="border-b border-gray-200">
                         <div className="flex justify-between items-center py-3">
                           {item.href && !hasDropdown ? (
                             <Link
                               href={item.href}
                               onClick={() => setOpen(false)}
-                              className={`text-base font-semibold flex-1 ${textClass}`}
+                              className="text-base font-semibold flex-1 text-black"
                             >
                               {item.title}
                             </Link>
                           ) : (
                             <button
                               onClick={() => toggleDropdown(item.title)}
-                              className={`text-base font-semibold flex-1 text-left ${textClass}`}
+                              className="text-base font-semibold flex-1 text-left text-black"
                             >
                               {item.title}
                             </button>
@@ -201,83 +194,81 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ theme = "light" }) => {
                               <span className="text-gray-300 select-none">|</span>
                               <button onClick={() => toggleDropdown(item.title)}>
                                 <FaChevronDown
-                                  className={`transition-transform ${expanded ? "rotate-180" : ""} ${textClass}`}
+                                  className={`transition-transform ${expanded ? "rotate-180" : ""} text-black`}
                                 />
                               </button>
                             </div>
                           )}
                         </div>
 
-                        <AnimatePresence initial={false}>
-                          {expanded && hasDropdown && (
-                            <motion.ul
-                              initial={{ height: 0, opacity: 0 }}
-                              animate={{ height: "auto", opacity: 1 }}
-                              exit={{ height: 0, opacity: 0 }}
-                              transition={{ duration: 0.25 }}
-                            >
-                              {item.subItems!.map((sub) => {
-                                const hasChildren = !!sub.children?.length;
-                                const subExpanded = activeSub === sub.title;
+                        {expanded && hasDropdown && (
+                          <motion.ul
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.25 }}
+                          >
+                            {item.subItems!.map(sub => {
+                              const hasChildren = !!sub.children?.length;
+                              const subExpanded = activeSub === sub.title;
 
-                                return (
-                                  <li key={sub.title} className={`border-b ${borderClass}`}>
-                                    <div className="flex justify-between items-center py-2">
-                                      {sub.href && !hasChildren ? (
-                                        <Link
-                                          href={sub.href}
-                                          onClick={() => setOpen(false)}
-                                          className={`text-sm pl-4 flex-1 ${textClass}`}
-                                        >
-                                          {sub.title}
-                                        </Link>
-                                      ) : (
-                                        <button
-                                          onClick={() => toggleSub(sub.title)}
-                                          className={`text-sm pl-4 flex-1 text-left ${textClass}`}
-                                        >
-                                          {sub.title}
-                                        </button>
-                                      )}
-
-                                      {hasChildren && (
-                                        <div className="flex items-center gap-2">
-                                          <span className="text-gray-300 select-none">|</span>
-                                          <button onClick={() => toggleSub(sub.title)}>
-                                            <FaChevronDown
-                                              className={`transition-transform ${subExpanded ? "rotate-180" : ""} ${textClass}`}
-                                            />
-                                          </button>
-                                        </div>
-                                      )}
-                                    </div>
-
-                                    {subExpanded && hasChildren && (
-                                      <motion.ul
-                                        initial={{ height: 0, opacity: 0 }}
-                                        animate={{ height: "auto", opacity: 1 }}
-                                        exit={{ height: 0, opacity: 0 }}
-                                        transition={{ duration: 0.25 }}
+                              return (
+                                <li key={sub.title} className="border-b border-gray-200">
+                                  <div className="flex justify-between items-center py-2">
+                                    {sub.href && !hasChildren ? (
+                                      <Link
+                                        href={sub.href}
+                                        onClick={() => setOpen(false)}
+                                        className="text-sm pl-4 flex-1 text-black"
                                       >
-                                        {sub.children!.map((child) => (
-                                          <li key={child.label} className={`border-b ${borderClass}`}>
-                                            <Link
-                                              href={child.href}
-                                              onClick={() => setOpen(false)}
-                                              className={`block py-2 pl-6 text-sm ${textClass}`}
-                                            >
-                                              {child.label}
-                                            </Link>
-                                          </li>
-                                        ))}
-                                      </motion.ul>
+                                        {sub.title}
+                                      </Link>
+                                    ) : (
+                                      <button
+                                        onClick={() => toggleSub(sub.title)}
+                                        className="text-sm pl-4 flex-1 text-left text-black"
+                                      >
+                                        {sub.title}
+                                      </button>
                                     )}
-                                  </li>
-                                );
-                              })}
-                            </motion.ul>
-                          )}
-                        </AnimatePresence>
+
+                                    {hasChildren && (
+                                      <div className="flex items-center gap-2">
+                                        <span className="text-gray-300 select-none">|</span>
+                                        <button onClick={() => toggleSub(sub.title)}>
+                                          <FaChevronDown
+                                            className={`transition-transform ${subExpanded ? "rotate-180" : ""} text-black`}
+                                          />
+                                        </button>
+                                      </div>
+                                    )}
+                                  </div>
+
+                                  {subExpanded && hasChildren && (
+                                    <motion.ul
+                                      initial={{ height: 0, opacity: 0 }}
+                                      animate={{ height: "auto", opacity: 1 }}
+                                      exit={{ height: 0, opacity: 0 }}
+                                      transition={{ duration: 0.25 }}
+                                    >
+                                      {sub.children!.map(child => (
+                                        <li key={child.label} className="border-b border-gray-200">
+                                          <Link
+                                            href={child.href}
+                                            onClick={() => setOpen(false)}
+                                            className="block py-2 pl-6 text-sm text-black"
+                                          >
+                                            {child.label}
+                                          </Link>
+                                        </li>
+                                      ))}
+                                    </motion.ul>
+                                  )}
+                                </li>
+                              );
+                            })}
+                          </motion.ul>
+                        )}
                       </li>
                     );
                   })}
@@ -291,4 +282,4 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ theme = "light" }) => {
   );
 };
 
-export default MobileMenu;
+export default MobileMenuHome02;

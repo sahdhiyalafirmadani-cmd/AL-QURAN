@@ -18,7 +18,7 @@ const MegaMenu = () => {
   const darkHomes = megaItems.slice(6);
 
   return (
-  <div className=" absolute top-full -right-260 w-[1320px] bg-white rounded-lg shadow-2xl p-8 ml-20% h-[550px]">
+  <div className=" absolute top-[calc(100%+32px)] -right-260 w-[1320px] bg-white rounded-lg shadow-2xl p-8 ml-20% h-[550px]">
       {/* First row - Home 01 to Home 06 aligned to right */}
       <div className="grid grid-cols-6 gap-4 justify-end">
         {normalHomes.map((it) => (

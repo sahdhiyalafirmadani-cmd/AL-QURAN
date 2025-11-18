@@ -8,7 +8,7 @@ const CtaTwo: React.FC = () => {
   return (
     <section
       aria-label="cta-two"
-      className="relative z-20 "
+      className="relative z-20"
     >
       <div className="max-w-8xl mx-auto px-4">
         {/* Motion Wrapper */}
@@ -17,7 +17,10 @@ const CtaTwo: React.FC = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: 'easeOut' }}
           viewport={{ once: true }}
-          className="relative overflow-hidden rounded-2xl shadow-xl px-8 py-10 md:py-10 flex flex-col md:flex-row items-center justify-between gap-8 bg-gradient-to-r from-[#0D6832] via-[#7ab945] to-[#F9C33C]"
+          className="relative overflow-hidden rounded-2xl shadow-xl px-8 py-10 md:py-10 flex flex-col md:flex-row items-center justify-between gap-8"
+          style={{
+            background: "linear-gradient(to right, #50bc84 0%, #F3B815 100%)",
+          }}
         >
           {/* Background Overlay */}
           <div

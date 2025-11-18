@@ -2,19 +2,46 @@
 
 import ServiceCard from "../molecules/ServiceCard";
 
-export default function ServiceOne({ theme = "light" }: { theme?: "light" | "dark" }) {
-  const sectionBg = theme === "dark" ? "bg-[#121d18]" : "bg-[#051912]";
-  
+export default function ServiceOne({
+  theme = "light",
+  homeVersion = "home01",
+}: {
+  theme?: "light" | "dark";
+  homeVersion?: "home01" | "home02";
+}) {
+  const sectionBg =
+    homeVersion === "home02"
+      ? "" // gradient handled in style
+      : theme === "dark"
+      ? "bg-[#121d18]"
+      : "bg-[#051912]";
+
   return (
     <section
-      className={`relative py-32 bg-cover bg-center min-h-[800px] ${sectionBg}`}
-      style={{
-        backgroundImage: "url('/assets/images/background/service-bg.png')",
-      }}
+      className={`relative py-32 min-h-[800px] ${sectionBg}`}
+      style={
+        homeVersion === "home02"
+          ? {
+              backgroundImage: `linear-gradient(to right, #2F443A 40%, #F2CD64 100%), url('/assets/images/background/service-bg.png')`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+              backgroundBlendMode: "overlay", // ensures image is visible under gradient
+            }
+          : {
+              backgroundImage: "url('/assets/images/background/service-bg.png')",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }
+      }
     >
       {/* Section Title */}
       <div className="text-center mb-14">
-        <p className="text-[#0D6832] font-medium uppercase tracking-wider">
+        <p
+          className={`font-medium uppercase tracking-wider ${
+            homeVersion === "home02" ? "text-white" : "text-[#0D6832]"
+          }`}
+        >
           WHAT WE OFFER
         </p>
         <h2 className="text-[white] text-3xl md:text-4xl font-bold mt-3">

@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 const CtaOne: React.FC = () => {
   return (
     <section
-      className="relative z-20 -mt-20 "
+      className="relative z-20 -mt-20"
       aria-label="cta-one"
     >
       <div className="max-w-8xl mx-auto px-4">
@@ -15,7 +15,10 @@ const CtaOne: React.FC = () => {
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="relative overflow-hidden rounded-xl shadow-xl px-8 py-8 md:py-14 flex flex-col md:flex-row items-center justify-between gap-8 bg-gradient-to-r from-[#0D6832] via-[#7ab945] to-[#F9C33C]"
+          className="relative overflow-hidden rounded-xl shadow-xl px-8 py-8 md:py-14 flex flex-col md:flex-row items-center justify-between gap-8"
+          style={{
+            background: "linear-gradient(to right, #50bc84 0%, #F3B815 100%)",
+          }}
         >
           {/* Background image overlay */}
           <div
@@ -35,13 +38,12 @@ const CtaOne: React.FC = () => {
 
           {/* Button */}
           <a
-  href="/contact"
-  className="inline-block px-8 py-3.5 text-base font-semibold rounded-md text-white 
-             bg-[#0D6832] hover:bg-black transition-colors duration-500 relative z-10 mr-[50px]"
->
-  Quick Start Now
-</a>
-
+            href="/contact"
+            className="inline-block px-8 py-3.5 text-base font-semibold rounded-md text-white 
+                       bg-[#0D6832] hover:bg-black transition-colors duration-500 relative z-10 mr-[50px]"
+          >
+            Quick Start Now
+          </a>
         </motion.div>
       </div>
     </section>
